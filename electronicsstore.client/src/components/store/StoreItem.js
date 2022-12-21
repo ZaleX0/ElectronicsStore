@@ -1,8 +1,12 @@
 import React from 'react'
 import { Button, Card } from 'react-bootstrap'
-import { useShoppingCart } from '../../contexts/ShoppingCartContext';
+import { Dash, Plus, Trash } from 'react-bootstrap-icons';
+import { formatCurrency } from '../../utilities/formatCurrency';
+import { useShoppingCart } from '../../hooks/useShoppingCart'
+import { LinkContainer } from 'react-router-bootstrap';
+import './StoreItem.css'
 
-export function StoreItem({id, brandId, name, brandName, description, price}) {
+export function StoreItem({id, brandId, name, brandName, description, imageUrl, price}) {
   const {
     getItemQuantity,
     increaseCartQuantity,
@@ -12,32 +16,38 @@ export function StoreItem({id, brandId, name, brandName, description, price}) {
   const quantity = getItemQuantity(id)
   return (
     <Card>
-      <Card.Body className="d-flex justify-content-between">
-        <div>
-          <Card.Title>{name}</Card.Title>
-          <ul>
-            <li>
+      <Card.Header>
+        <Card.Title>{name}</Card.Title>
+      </Card.Header>
+      <LinkContainer to={`/store/${id}`} style={{ cursor: "pointer" }}>
+        <Card.Body className="d-flex justify-content-between">
+          <img src={imageUrl} alt="" style={{height: "250px", width: "250px", objectFit: "cover"}} />
+          <div className="w-50">
+            <div className="display-6 mb-4">
               {brandName}
-            </li>
-            <li>
-              {description}
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h1 className="display-6">${price}</h1>
-        </div>
-      </Card.Body>
+            </div>
+            <div>
+              <p className="line-clamp">
+                {description}
+              </p>
+            </div>
+          </div>
+          <div>
+            <h1 className="display-6">{formatCurrency(price)}</h1>
+          </div>
+        </Card.Body>
+      </LinkContainer>
       <Card.Footer className="d-flex justify-content-end" style={{gap: ".5rem"}}>
         {quantity === 0 ? (
           <Button onClick={() => increaseCartQuantity(id)}>Add to cart</Button>
         ) : (
           <>
-            <Button onClick={() => decreaseCartQuantity(id)}>-</Button>
+            <Button onClick={() => removeFromCart(id)} variant="danger"><Trash /></Button>
+            <Button onClick={() => decreaseCartQuantity(id)}><Dash /></Button>
             <div>
               <span className="fs-3">{quantity}</span> in cart
             </div>
-            <Button onClick={() => increaseCartQuantity(id)}>+</Button>
+            <Button onClick={() => increaseCartQuantity(id)}><Plus /></Button>
           </>
         )}
       </Card.Footer>

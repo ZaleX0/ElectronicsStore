@@ -1,10 +1,12 @@
 import React from 'react'
 import { Button, Container, Nav, Navbar as NavbarBs } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
-import { useShoppingCart } from '../contexts/ShoppingCartContext'
+import { useShoppingCart } from '../hooks/useShoppingCart'
+import { useAuth } from '../hooks/useAuth'
 
 export function Navbar() {
-  const { cartQuantity } = useShoppingCart();
+  const { openCart, cartQuantity } = useShoppingCart();
+  const { isLogin, user, logout } = useAuth();
   return (
     <NavbarBs expand="lg" variant="dark" bg="dark" className="shadow mb-4">
       <Container>
@@ -14,10 +16,9 @@ export function Navbar() {
           <Nav className="me-auto">
             <Nav.Link to="/" as={NavLink}>Home</Nav.Link>
             <Nav.Link to="/store" as={NavLink}>Store</Nav.Link>
-            <Nav.Link to="/login" as={NavLink}>Login</Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link>Sign in</Nav.Link>
+            {renderAuthNavLink()}
           </Nav>
           {renderCartButton()}
         </NavbarBs.Collapse>
@@ -25,13 +26,23 @@ export function Navbar() {
     </NavbarBs>
   )
 
+  function renderAuthNavLink() {
+    if (isLogin) return <>
+      <NavbarBs.Text text-color="white">Signed as <i>{user.email}</i></NavbarBs.Text>
+      <Nav.Link onClick={logout}>Logout</Nav.Link>
+    </>
+
+    return <Nav.Link to="/login" as={NavLink}>Sign in</Nav.Link>
+  }
+
   function renderCartButton() {
     return (
       <Button
+        onClick={openCart}
         disabled={cartQuantity === 0}
         style={{width: "3rem", height: "3rem", position: "relative"}}
         variant="primary"
-        className="rounded-circle"
+        className="rounded-circle ms-2"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

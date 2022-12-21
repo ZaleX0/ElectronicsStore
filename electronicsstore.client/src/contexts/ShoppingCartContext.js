@@ -1,14 +1,27 @@
-import { createContext, useContext, useState } from "react"
+import { createContext, useState } from "react"
+import { ShoppingCart } from "../components/cart/ShoppingCart"
+import { useLocalStorage } from "../hooks/useLocalStorage"
+import StoreService from "../services/StoreService"
 
-const ShoppingCartContext = createContext({})
-
-export function useShoppingCart() {
-  return useContext(ShoppingCartContext)
-}
+export const ShoppingCartContext = createContext({})
 
 export function ShoppingCartProvider( { children } ) {
-  const [cartItems, setCartItems] = useState([])
+  const storeService = new StoreService()
+  const [isOpen, setIsOpen] = useState(false)
+  const [cartItems, setCartItems] = useLocalStorage("shopping-cart", [])
+  const [fetchedItems, setFetchedItems] = useState([])
   const cartQuantity = cartItems.reduce((quantity, item) => item.quantity + quantity, 0)
+
+  const openCart = () => setIsOpen(true)
+  const closeCart = () => setIsOpen(false)
+
+  const fetchByIds = async () => {
+    let requests = [];
+    for (let item of cartItems) {
+      requests.push(await storeService.getProductById(item.id));
+    }
+    setFetchedItems(requests);
+  }
 
   function getItemQuantity(id) {
     return cartItems.find(item => item.id === id)?.quantity || 0
@@ -42,11 +55,22 @@ export function ShoppingCartProvider( { children } ) {
         })
       }
     })
+    setFetchedItems(currItems => {
+      if (currItems.find(item => item.id === id)?.quantity === 1) {
+        return currItems.filter(item => item.id !== id)
+      }
+    })
   }
   function removeFromCart(id) {
     setCartItems(currItems => {
       return currItems.filter(item => item.id !== id)
     })
+    setFetchedItems(currItems => {
+      return currItems.filter(item => item.id !== id)
+    })
+  }
+  function clearCart() {
+    setCartItems([]);
   }
 
   return (
@@ -55,10 +79,16 @@ export function ShoppingCartProvider( { children } ) {
       increaseCartQuantity,
       decreaseCartQuantity,
       removeFromCart,
+      clearCart,
+      openCart,
+      closeCart,
       cartItems,
-      cartQuantity
+      cartQuantity,
+      fetchByIds,
+      fetchedItems
     }}>
       {children}
+      <ShoppingCart isOpen={isOpen} />
     </ShoppingCartContext.Provider>
   )
 }

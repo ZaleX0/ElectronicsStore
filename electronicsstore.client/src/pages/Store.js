@@ -14,7 +14,6 @@ export function Store() {
 
   return (
     <>
-      <button onClick={()=>console.log(storeItems)}>log</button>
       <h1 className="display-1">Store</h1>
       <div className="d-flex flex-column">
         {storeItems.map(item =>
