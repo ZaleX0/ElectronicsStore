@@ -1,4 +1,4 @@
-# ElectronicsStore
+# Electronics Store
 TODO: database and architecture descriptions
 
 # Configuration
@@ -15,7 +15,6 @@ Right click on the `ElectronicsStore.Api` project in Solution Explorer and selec
 ```
 
 2. Initiate database
-    - Choose `ReadingList` as Default project in Package Manager Console.
     - Run `update-database` command.
 > Sample data would be inserted into database automatically by using the [BrandAndProductSeeder](ElectronicsStore.Services/BrandAndProductSeeder.cs)
 
