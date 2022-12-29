@@ -1,6 +1,7 @@
-﻿using ElectronicsStore.Services.Interfaces;
-using ElectronicsStore.Services.Models;
+﻿using ElectronicsStore.Services.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using IAuthorizationService = ElectronicsStore.Services.Interfaces.IAuthorizationService;
 
 namespace ElectronicsStore.Api.Controllers;
 
@@ -25,7 +26,7 @@ public class AuthorizationController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> LoginUser(LoginDto dto)
     {
-        var token = await _service.GenerateJwt(dto);
-        return Ok(token);
+        var user = await _service.GetUser(dto);
+        return Ok(user);
     }
 }

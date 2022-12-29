@@ -25,6 +25,9 @@ export default class AuthService {
         password: password
       })
     });
-    return { status: response.status, text: await response.text()};
+    if (response.status === 200)
+      return {status: response.status, user: await response.json()};
+    else
+      return {status:response.status, user: null};
   }
 }

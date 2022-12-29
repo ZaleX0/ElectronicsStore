@@ -14,7 +14,7 @@ export default function Register() {
   const handleRegister = async (event) => {
     event.preventDefault();
     const response = await authService.register(formInputs.email, formInputs.password);
-    console.log(response);
+    
     if (response.status === 200) {
       navigate('/login');
     } else {

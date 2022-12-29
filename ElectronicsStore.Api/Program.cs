@@ -1,6 +1,7 @@
 using ElectronicsStore.Data;
 using ElectronicsStore.Data.Entities;
 using ElectronicsStore.Data.Interfaces;
+using ElectronicsStore.Data.Queries;
 using ElectronicsStore.Data.Repositories;
 using ElectronicsStore.Services;
 using ElectronicsStore.Services.Interfaces;
@@ -49,6 +50,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 builder.Services.AddScoped<IValidator<RegisterDto>, RegisterUserDtoValidator>();
+builder.Services.AddScoped<IValidator<ProductQuery>, ProductQueryValidator>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBrandRepository, BrandRepository>();
@@ -97,7 +99,7 @@ var app = builder.Build();
 // Seed sample data
 var scope = app.Services.CreateScope();
 var seeder = scope.ServiceProvider.GetRequiredService<BrandAndProductSeeder>();
-seeder.Seed();
+await seeder.Seed();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -1,4 +1,5 @@
-﻿using ElectronicsStore.Services.Interfaces;
+﻿using ElectronicsStore.Data.Queries;
+using ElectronicsStore.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ElectronicsStore.Api.Controllers;
@@ -15,9 +16,9 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get([FromQuery] ProductQuery query)
     {
-        var products = await _service.GetAll();
+        var products = await _service.GetAll(query);
         return Ok(products);
     }
 

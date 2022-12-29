@@ -10,5 +10,8 @@ public class ElectronicsStoreMappingProfile : Profile
 	{
 		CreateMap<Product, ProductDto>()
 			.ForMember(d => d.BrandName, c => c.MapFrom(s => s.Brand.Name));
+
+		CreateMap<User, UserDto>()
+			.ForMember(d => d.RoleName, c => c.MapFrom(s => s.Role.Name));
 	}
 }

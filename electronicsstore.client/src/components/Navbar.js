@@ -3,32 +3,53 @@ import { Button, Container, Nav, Navbar as NavbarBs } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import { useShoppingCart } from '../hooks/useShoppingCart'
 import { useAuth } from '../hooks/useAuth'
+import { Link } from 'react-router-dom'
 
 export function Navbar() {
   const { openCart, cartQuantity } = useShoppingCart();
   const { isLogin, user, logout } = useAuth();
   return (
-    <NavbarBs expand="lg" variant="dark" bg="dark" className="shadow mb-4">
-      <Container>
-        <NavbarBs.Brand to="/" as={NavLink}>Electronics Store</NavbarBs.Brand>
-        <NavbarBs.Toggle aria-controls="responsive-navbar-nav" />
-        <NavbarBs.Collapse id="responsive-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link to="/" as={NavLink}>Home</Nav.Link>
-            <Nav.Link to="/store" as={NavLink}>Store</Nav.Link>
-          </Nav>
-          <Nav>
-            {renderAuthNavLink()}
-          </Nav>
-          {renderCartButton()}
-        </NavbarBs.Collapse>
-      </Container>
-    </NavbarBs>
+    <>
+      {renderAdminBar()}
+      <NavbarBs expand="lg" variant="dark" bg="dark" className="shadow mb-4">
+        <Container>
+          <NavbarBs.Brand to="/" as={NavLink}>Electronics Store</NavbarBs.Brand>
+          <NavbarBs.Toggle aria-controls="responsive-navbar-nav" />
+          <NavbarBs.Collapse id="responsive-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link to="/" as={NavLink}>Home</Nav.Link>
+              <Nav.Link to="/store" as={NavLink}>Store</Nav.Link>
+            </Nav>
+            <Nav>
+              {renderAuthNavLink()}
+            </Nav>
+            {renderCartButton()}
+          </NavbarBs.Collapse>
+        </Container>
+      </NavbarBs>
+    </>
   )
+
+  function renderAdminBar() {
+    if (isLogin && user.roleName === "Admin") 
+      return (
+        <NavbarBs expand="lg" bg="info">
+          <Container>
+          <NavbarBs.Brand>Admin Panel</NavbarBs.Brand>
+          <NavbarBs.Toggle aria-controls="responsive-navbar-nav" />
+          <NavbarBs.Collapse id="responsive-navbar-nav">
+            <Nav className="me-auto">
+                <Nav.Link to="/login" as={NavLink}>Sign in</Nav.Link>
+            </Nav>
+          </NavbarBs.Collapse>
+          </Container>
+        </NavbarBs>
+      )
+  }
 
   function renderAuthNavLink() {
     if (isLogin) return <>
-      <NavbarBs.Text text-color="white">Signed as <i>{user.email}</i></NavbarBs.Text>
+      <NavbarBs.Text>Signed as <i>{user.email}</i></NavbarBs.Text>
       <Nav.Link onClick={logout}>Logout</Nav.Link>
     </>
 

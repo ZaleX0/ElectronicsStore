@@ -58,6 +58,8 @@ export function ShoppingCartProvider( { children } ) {
     setFetchedItems(currItems => {
       if (currItems.find(item => item.id === id)?.quantity === 1) {
         return currItems.filter(item => item.id !== id)
+      } else {
+        return currItems
       }
     })
   }

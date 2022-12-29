@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ElectronicsStore.Data.Interfaces;
+using ElectronicsStore.Data.Queries;
 using ElectronicsStore.Services.Exceptions;
 using ElectronicsStore.Services.Interfaces;
 using ElectronicsStore.Services.Models;
@@ -17,11 +18,14 @@ public class ProductService : IProductService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<ProductDto>> GetAll()
+    public async Task<PagedResult<ProductDto>> GetAll(ProductQuery query)
     {
-        var products = await _unitOfWork.Products.GetAllAsync();
+        var products = await _unitOfWork.Products.GetAllAsync(query);
         var productDtos = _mapper.Map<IEnumerable<ProductDto>>(products);
-        return productDtos;
+
+        var totalCount = await _unitOfWork.Products.CountAsync(query);
+
+        return new PagedResult<ProductDto>(productDtos, totalCount, query.PageSize, query.PageNumber);
     }
 
     public async Task<ProductDto> GetById(int id)

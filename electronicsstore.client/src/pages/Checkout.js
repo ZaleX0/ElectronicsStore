@@ -50,7 +50,7 @@ export default function Checkout() {
             </div>
           </Card.Body>
           <Card.Footer>
-            <Button className="w-100" variant="success" onClick={checkout} disabled={cartQuantity <= 0}>Checkout <Bag /></Button>
+            <Button className="w-100" variant="success" onClick={checkout} disabled={cartQuantity <= 0}>Purchase <Bag /></Button>
           </Card.Footer>
         </Card>
       </div>

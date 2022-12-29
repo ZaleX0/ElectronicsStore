@@ -1,9 +1,10 @@
-﻿using ElectronicsStore.Services.Models;
+﻿using ElectronicsStore.Data.Queries;
+using ElectronicsStore.Services.Models;
 
 namespace ElectronicsStore.Services.Interfaces;
 
 public interface IProductService
 {
-    Task<IEnumerable<ProductDto>> GetAll();
+    Task<PagedResult<ProductDto>> GetAll(ProductQuery query);
     Task<ProductDto> GetById(int id);
 }

@@ -15,24 +15,28 @@ namespace ElectronicsStore.Services;
 public class AuthorizationService : IAuthorizationService
 {
     private readonly IElectronicsStoreUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly AuthenticationSettings _authenticationSettings;
 
     public AuthorizationService(
         IElectronicsStoreUnitOfWork unitOfWork,
+        IMapper mapper,
         IPasswordHasher<User> passwordHasher,
         AuthenticationSettings authenticationSettings)
     {
         _passwordHasher = passwordHasher;
         _authenticationSettings = authenticationSettings;
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
-    public async Task RegisterUser(RegisterDto dto)
+    public async Task RegisterUser(RegisterDto dto, int roleId = 1)
     {
         var newUser = new User
         {
-            Email = dto.Email
+            Email = dto.Email,
+            RoleId = roleId
         };
 
         var hash = _passwordHasher.HashPassword(newUser, dto.Password);
@@ -55,6 +59,7 @@ public class AuthorizationService : IAuthorizationService
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Role, user.Role.Name),
             new Claim(ClaimTypes.Email, user.Email),
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
@@ -70,5 +75,14 @@ public class AuthorizationService : IAuthorizationService
 
         var tokenHandler = new JwtSecurityTokenHandler();
         return tokenHandler.WriteToken(token);
+    }
+
+    public async Task<UserDto> GetUser(LoginDto dto)
+    {
+        var token = await GenerateJwt(dto);
+        var user = await _unitOfWork.Users.GetByEmailAsync(dto.Email);
+        var userDto = _mapper.Map<UserDto>(user);
+        userDto.Token = token;
+        return userDto;
     }
 }

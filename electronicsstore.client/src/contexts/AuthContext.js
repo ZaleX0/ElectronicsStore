@@ -12,7 +12,14 @@ export function AuthProvider( { children } ) {
   async function login(email, password) {
     const response = await authService.login(email, password);
     if (response.status === 200) {
-      setUser({ email: email, token: response.text });
+      const user = response.user;
+      setUser({
+        id: user.id,
+        roleId: user.roleId,
+        roleName: user.roleName,
+        email: user.email,
+        token: user.token
+      });
       setIsLogin(true);
     }
     return response;
