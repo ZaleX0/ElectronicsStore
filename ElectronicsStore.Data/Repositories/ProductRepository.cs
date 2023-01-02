@@ -25,6 +25,9 @@ public class ProductRepository : IProductRepository
     {
         var baseQuery = _context.Products
             .Include(p => p.Brand)
+            .Include(p => p.Category)
+            .Where(p => query.CategoryId == null
+                || p.CategoryId == query.CategoryId)
             .Where(p => query.SearchPhrase == null
                 || p.Name.ToLower().Contains(query.SearchPhrase.ToLower())
                 || p.Description.ToLower().Contains(query.SearchPhrase.ToLower()));
@@ -53,6 +56,8 @@ public class ProductRepository : IProductRepository
     public async Task<int> CountAsync(ProductQuery query)
     {
         return await _context.Products
+            .Where(p => query.CategoryId == null
+                || p.CategoryId == query.CategoryId)
             .Where(p => query.SearchPhrase == null
                 || p.Name.ToLower().Contains(query.SearchPhrase.ToLower())
                 || p.Description.ToLower().Contains(query.SearchPhrase.ToLower()))
@@ -63,6 +68,7 @@ public class ProductRepository : IProductRepository
     {
         return await _context.Products
             .Include(p => p.Brand)
+            .Include(p => p.Category)
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 

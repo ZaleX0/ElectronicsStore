@@ -18,12 +18,12 @@ public class ProductController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] ProductQuery query)
     {
-        var products = await _service.GetAll(query);
-        return Ok(products);
+        var pagedProducts = await _service.GetAll(query);
+        return Ok(pagedProducts);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> GetById(int id)
     {
         var product = await _service.GetById(id);
         return Ok(product);

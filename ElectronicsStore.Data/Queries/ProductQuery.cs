@@ -13,4 +13,5 @@ public class ProductQuery
     public int PageSize { get; set; } = 5;
     public string? SortBy { get; set; }
     public SortDirection SortDirection { get; set; }
+    public int? CategoryId { get; set; }
 }
