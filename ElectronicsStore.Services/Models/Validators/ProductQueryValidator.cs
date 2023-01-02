@@ -6,7 +6,7 @@ namespace ElectronicsStore.Services.Models.Validators;
 
 public class ProductQueryValidator : AbstractValidator<ProductQuery>
 {
-	private int[] allowedPageSizes = new[] { 3, 5, 10, 15 };
+	private int[] allowedPageSizes = new[] { 2, 5, 10, 15 };
 	private string[] allowedSortByColumnNames =
 	{
 		nameof(Product.Name),

@@ -10,17 +10,20 @@ public class ElectronicsStoreUnitOfWork : IElectronicsStoreUnitOfWork
         ElectronicsStoreDbContext context,
         IUserRepository users,
         IBrandRepository brands,
-        IProductRepository products)
+        IProductRepository products,
+        ICategoryRepository categories)
     {
         _context = context;
         Users = users;
         Brands = brands;
         Products = products;
+        Categories = categories;
     }
 
     public IUserRepository Users { get; }
     public IBrandRepository Brands { get; }
     public IProductRepository Products { get; }
+    public ICategoryRepository Categories { get; }
 
     public async Task<int> CommitAsync()
     {
