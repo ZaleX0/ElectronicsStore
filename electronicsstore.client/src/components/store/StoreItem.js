@@ -6,7 +6,7 @@ import { useShoppingCart } from '../../hooks/useShoppingCart'
 import { LinkContainer } from 'react-router-bootstrap';
 import './StoreItem.css'
 
-export function StoreItem({id, brandId, name, brandName, description, imageUrl, price}) {
+export function StoreItem({id, brandId, categoryId, name, brandName, categoryName, description, imageUrl, price}) {
   const {
     getItemQuantity,
     increaseCartQuantity,
@@ -23,8 +23,9 @@ export function StoreItem({id, brandId, name, brandName, description, imageUrl, 
         <Card.Body className="d-flex justify-content-between">
           <img src={imageUrl} alt="" style={{height: "250px", width: "250px", objectFit: "cover"}} />
           <div className="w-50">
-            <div className="display-6 mb-4">
-              {brandName}
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <div className="display-6">{brandName}</div>
+              <div>{categoryName}</div>
             </div>
             <div>
               <p className="line-clamp">

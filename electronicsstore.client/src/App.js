@@ -32,6 +32,9 @@ export default function App() {
             </Route>
           </Routes>
         </Container>
+        <footer>
+          footer
+        </footer>
       </ShoppingCartProvider>
     </AuthProvider>
   )
