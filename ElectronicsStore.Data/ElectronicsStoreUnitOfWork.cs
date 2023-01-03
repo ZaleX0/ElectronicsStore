@@ -11,19 +11,25 @@ public class ElectronicsStoreUnitOfWork : IElectronicsStoreUnitOfWork
         IUserRepository users,
         IBrandRepository brands,
         IProductRepository products,
-        ICategoryRepository categories)
+        ICategoryRepository categories,
+        IOrderRepository orders,
+        IOrderProductRepository orderProducts)
     {
         _context = context;
         Users = users;
         Brands = brands;
         Products = products;
         Categories = categories;
+        Orders = orders;
+        OrderProducts = orderProducts;
     }
 
     public IUserRepository Users { get; }
     public IBrandRepository Brands { get; }
     public IProductRepository Products { get; }
     public ICategoryRepository Categories { get; }
+    public IOrderRepository Orders { get; }
+    public IOrderProductRepository OrderProducts { get; }
 
     public async Task<int> CommitAsync()
     {

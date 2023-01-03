@@ -6,6 +6,8 @@ public interface IElectronicsStoreUnitOfWork
     IBrandRepository Brands { get; }
     IProductRepository Products { get; }
     ICategoryRepository Categories { get; }
+    IOrderRepository Orders { get; }
+    IOrderProductRepository OrderProducts { get; }
 
     Task<int> CommitAsync();
 }
