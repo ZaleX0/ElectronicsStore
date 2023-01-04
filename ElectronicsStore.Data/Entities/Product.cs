@@ -12,4 +12,6 @@ public class Product
 
     virtual public Brand Brand { get; set; }
     virtual public Category Category { get; set; }
+
+    virtual public List<OrderProduct> OrderProducts { get; set; }
 }

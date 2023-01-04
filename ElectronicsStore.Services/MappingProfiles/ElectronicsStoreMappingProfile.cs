@@ -16,5 +16,10 @@ public class ElectronicsStoreMappingProfile : Profile
 
 		CreateMap<User, UserDto>()
 			.ForMember(d => d.RoleName, c => c.MapFrom(s => s.Role.Name));
+
+		CreateMap<Order, OrderDto>()
+			.ForMember(d => d.UserEmail, c => c.MapFrom(s => s.User.Email))
+			.ForMember(d => d.Products, c => c.MapFrom(s => s.OrderProducts.Select(op => op.Product)))
+			.ForMember(d => d.IsAccepted, c => c.MapFrom(s => s.TimeAccepted != null));
 	}
 }

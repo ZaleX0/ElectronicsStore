@@ -1,6 +1,6 @@
 ﻿namespace ElectronicsStore.Services.Models;
 
-public class CheckoutProductDto
+public class CreateOrderProductDto
 {
     public int Id { get; set; }
     public int Quantity { get; set; }
