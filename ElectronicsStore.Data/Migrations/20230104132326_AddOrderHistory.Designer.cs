@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ElectronicsStore.Data.Migrations
 {
     [DbContext(typeof(ElectronicsStoreDbContext))]
-    [Migration("20230103125643_AddOrderHistory")]
+    [Migration("20230104132326_AddOrderHistory")]
     partial class AddOrderHistory
     {
         /// <inheritdoc />
@@ -78,6 +78,8 @@ namespace ElectronicsStore.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Orders");
                 });
 
@@ -93,6 +95,8 @@ namespace ElectronicsStore.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("OrderId", "ProductId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("OrderProduct");
                 });
@@ -177,6 +181,36 @@ namespace ElectronicsStore.Data.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("ElectronicsStore.Data.Entities.Order", b =>
+                {
+                    b.HasOne("ElectronicsStore.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ElectronicsStore.Data.Entities.OrderProduct", b =>
+                {
+                    b.HasOne("ElectronicsStore.Data.Entities.Order", "Order")
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ElectronicsStore.Data.Entities.Product", "Product")
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("ElectronicsStore.Data.Entities.Product", b =>
                 {
                     b.HasOne("ElectronicsStore.Data.Entities.Brand", "Brand")
@@ -205,6 +239,16 @@ namespace ElectronicsStore.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("ElectronicsStore.Data.Entities.Order", b =>
+                {
+                    b.Navigation("OrderProducts");
+                });
+
+            modelBuilder.Entity("ElectronicsStore.Data.Entities.Product", b =>
+                {
+                    b.Navigation("OrderProducts");
                 });
 #pragma warning restore 612, 618
         }

@@ -5,7 +5,7 @@ namespace ElectronicsStore.Data.Interfaces;
 public interface IOrderRepository
 {
     Task AddAsync(Order order);
-    Task<IEnumerable<Order>> GetAsync();
+    Task<IEnumerable<Order>> GetAllAsync();
     Task<Order?> GetByIdAsync(int id);
     Task<IEnumerable<Order>> GetByUserIdAsync(int userId);
     void Remove(Order order);

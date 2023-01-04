@@ -21,6 +21,16 @@ public class ElectronicsStoreDbContext : DbContext
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.Entity<Product>().Property(p => p.Price).HasColumnType("decimal(18,2)");
-		modelBuilder.Entity<OrderProduct>().HasKey(op => new { op.OrderId, op.ProductId });
-	}
+        modelBuilder.Entity<Order>().Property(p => p.TotalPrice).HasColumnType("decimal(18,2)");
+
+        modelBuilder.Entity<OrderProduct>().HasKey(op => new { op.OrderId, op.ProductId });
+		modelBuilder.Entity<OrderProduct>()
+			.HasOne(op => op.Order)
+			.WithMany(o => o.OrderProducts)
+			.HasForeignKey(op => op.OrderId);
+        modelBuilder.Entity<OrderProduct>()
+			.HasOne(op => op.Product)
+            .WithMany(p => p.OrderProducts)
+            .HasForeignKey(op => op.ProductId);
+    }
 }

@@ -24,10 +24,33 @@ public class OrderController : ControllerBase
         return Ok();
     }
 
+    [HttpGet("all")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetAll()
+    {
+        //var orders = await _service.GetAll();
+        //return Ok(orders);
+        return Ok();
+    }
+
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var orders = await _service.Get();
+        var orders = await _service.GetForUser();
         return Ok(orders);
+    }
+
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> AcceptOrder(int id)
+    {
+        await _service.Accept(id);
+        return Ok();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> CancelOrder(int id)
+    {
+        await _service.Cancel(id);
+        return Ok();
     }
 }
