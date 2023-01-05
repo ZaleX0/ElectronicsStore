@@ -11,6 +11,8 @@ import { AuthProvider } from './contexts/AuthContext'
 import Product from './pages/Product'
 import CheckoutSuccess from './pages/CheckoutSuccess'
 import Register from './pages/Register'
+import Orders from './pages/Orders'
+import OrdersAdmin from './pages/OrdersAdmin'
 
 export default function App() {
   return (
@@ -18,19 +20,7 @@ export default function App() {
       <ShoppingCartProvider>
         <Navbar />
         <Container>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/store">
-              <Route index element={<Store />} />
-              <Route path=":id" element={<Product />} />
-            </Route>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/checkout">
-              <Route index element={<Checkout />} />
-              <Route path="success" element={<CheckoutSuccess />} />
-            </Route>
-          </Routes>
+          {routes()}
         </Container>
         <footer>
           footer
@@ -38,4 +28,26 @@ export default function App() {
       </ShoppingCartProvider>
     </AuthProvider>
   )
+
+  function routes() {
+    return (
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/store">
+          <Route index element={<Store />} />
+          <Route path=":id" element={<Product />} />
+        </Route>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/checkout">
+          <Route index element={<Checkout />} />
+          <Route path="success" element={<CheckoutSuccess />} />
+        </Route>
+        <Route path="/orders">
+          <Route index element={<Orders/>} />
+          <Route path="admin" element={<OrdersAdmin />} />
+        </Route>
+      </Routes>
+    )
+  }
 }

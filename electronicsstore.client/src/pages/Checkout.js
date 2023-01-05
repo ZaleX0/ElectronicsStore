@@ -1,6 +1,6 @@
 import { Button, Card } from "react-bootstrap";
 import { useShoppingCart } from "../hooks/useShoppingCart";
-import CheckoutService from "../services/CheckoutService";
+import OrderService from "../services/OrderService";
 import { useEffect } from "react";
 import { CheckoutItem } from "../components/cart/CheckoutItem";
 import { formatCurrency } from "../utilities/formatCurrency";
@@ -8,12 +8,12 @@ import { Bag } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 
 export default function Checkout() {
-  const checkoutService = new CheckoutService();
+  const orderService = new OrderService();
   const { cartItems, cartQuantity, fetchByIds, fetchedItems, clearCart } = useShoppingCart()
   const navigate = useNavigate();
 
   const checkout = async () => {
-    const response = await checkoutService.checkout(cartItems);
+    const response = await orderService.makeOrder(cartItems);
     if (response.status === 200) {
       clearCart();
       navigate("/checkout/success");
