@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import AuthService from "../services/AuthService";
 
@@ -8,6 +8,10 @@ export function AuthProvider( { children } ) {
   const authService = new AuthService()
   const [isLogin, setIsLogin] = useState(false)
   const [user, setUser] = useLocalStorage("user", {})
+
+  useEffect(() => {
+    setIsLogin(JSON.stringify(user) !== "{}");
+  }, [])
 
   async function login(email, password) {
     const response = await authService.login(email, password);

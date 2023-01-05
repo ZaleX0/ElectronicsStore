@@ -1,16 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Container, Nav, Navbar as NavbarBs } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import { useShoppingCart } from '../hooks/useShoppingCart'
 import { useAuth } from '../hooks/useAuth'
-import { Link } from 'react-router-dom'
 
 export function Navbar() {
   const { openCart, cartQuantity } = useShoppingCart();
-  const { isLogin, user, logout } = useAuth();
+  const { isLogin, user, login, logout } = useAuth();
+
   return (
     <>
-      {renderAdminBar()}
+      {(isLogin && user.roleName === "Admin") && renderAdminBar()}
       <NavbarBs expand="lg" variant="dark" bg="dark" className="shadow mb-4">
         <Container>
           <NavbarBs.Brand to="/" as={NavLink}>Electronics Store</NavbarBs.Brand>
@@ -19,6 +19,7 @@ export function Navbar() {
             <Nav className="me-auto">
               <Nav.Link to="/" as={NavLink}>Home</Nav.Link>
               <Nav.Link to="/store" as={NavLink}>Store</Nav.Link>
+              {isLogin && <Nav.Link to="/orders" as={NavLink}>My Orders</Nav.Link>}
             </Nav>
             <Nav>
               {renderAuthNavLink()}
@@ -31,7 +32,7 @@ export function Navbar() {
   )
 
   function renderAdminBar() {
-    if (isLogin && user.roleName === "Admin") 
+    //if (isLogin && user.roleName === "Admin") 
       return (
         <NavbarBs expand="lg" bg="info">
           <Container>
@@ -39,7 +40,7 @@ export function Navbar() {
           <NavbarBs.Toggle aria-controls="responsive-navbar-nav" />
           <NavbarBs.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
-                <Nav.Link to="/login" as={NavLink}>Sign in</Nav.Link>
+                <Nav.Link to="/orders/admin" as={NavLink}>Orders</Nav.Link>
             </Nav>
           </NavbarBs.Collapse>
           </Container>
