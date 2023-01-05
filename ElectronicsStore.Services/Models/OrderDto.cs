@@ -11,5 +11,5 @@ public class OrderDto
     public DateTime TimeOrdered { get; set; }
     public DateTime? TimeAccepted { get; set; }
     public decimal TotalPrice { get; set; }
-    public List<ProductDto> Products { get; set; }
+    public List<ProductDto> Products { get; set; } //TODO: change to List<OrderProductDto> with quantity
 }

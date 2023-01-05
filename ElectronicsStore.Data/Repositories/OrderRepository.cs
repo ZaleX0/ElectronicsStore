@@ -1,8 +1,12 @@
 ﻿using ElectronicsStore.Data.Entities;
 using ElectronicsStore.Data.Interfaces;
+using ElectronicsStore.Data.Queries;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using System.Diagnostics.CodeAnalysis;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ElectronicsStore.Data.Repositories;
 
@@ -20,22 +24,35 @@ public class OrderRepository : IOrderRepository
 		await _context.Orders.AddAsync(order);
 	}
 
-    public async Task<IEnumerable<Order>> GetAllAsync()
+    public async Task<IEnumerable<Order>> GetAllAsync(OrderQuery query)
     {
-        var query = IncludeUserAndOrderProducts(_context.Orders);
-        return await query.ToListAsync();
+        var baseQuery = SearchPhrase(_context.Orders, query.SearchPhrase);
+        baseQuery = Paginate(baseQuery, query.PageSize, query.PageNumber);
+        baseQuery = IncludeUserAndOrderProducts(baseQuery);
+        return await baseQuery.ToListAsync();
     }
 
-    public async Task<IEnumerable<Order>> GetByUserIdAsync(int userId)
+    public async Task<IEnumerable<Order>> GetByUserIdAsync(OrderQuery query, int userId)
     {
-        var query = _context.Orders.Where(o => o.UserId == userId);
-        query = IncludeUserAndOrderProducts(query);
-        return await query.ToListAsync();
+        var baseQuery = _context.Orders.Where(o => o.UserId == userId);
+        baseQuery = Paginate(baseQuery, query.PageSize, query.PageNumber);
+        baseQuery = IncludeUserAndOrderProducts(baseQuery);
+        return await baseQuery.ToListAsync();
     }
 
     public async Task<Order?> GetByIdAsync(int id)
     {
 		return await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
+    }
+
+    public async Task<int> CountAsync(OrderQuery query)
+    {
+        return await SearchPhrase(_context.Orders, query.SearchPhrase).CountAsync();
+    }
+
+    public async Task<int> CountByUserIdAsync(int userId)
+    {
+        return await _context.Orders.CountAsync(o => o.UserId == userId);
     }
 
     public void Update(Order order)
@@ -58,5 +75,19 @@ public class OrderRepository : IOrderRepository
             .Include(o => o.OrderProducts)
                 .ThenInclude(op => op.Product)
                 .ThenInclude(op => op.Category);
+    }
+
+    private IQueryable<Order> SearchPhrase(IQueryable<Order> baseQuery, string? searchPhrase)
+    {
+        return baseQuery
+            .Where(o => searchPhrase == null
+                || o.User.Email.ToLower().Contains(searchPhrase.ToLower()));
+    }
+
+    private IQueryable<Order> Paginate(IQueryable<Order> query, int pageSize, int pageNumber)
+    {
+        return query
+            .Skip(pageSize * (pageNumber - 1))
+            .Take(pageSize);
     }
 }

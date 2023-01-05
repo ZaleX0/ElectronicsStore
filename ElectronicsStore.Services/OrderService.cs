@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ElectronicsStore.Data.Entities;
 using ElectronicsStore.Data.Interfaces;
+using ElectronicsStore.Data.Queries;
 using ElectronicsStore.Services.Exceptions;
 using ElectronicsStore.Services.Interfaces;
 using ElectronicsStore.Services.Models;
@@ -45,19 +46,25 @@ public class OrderService : IOrderService
         await _unitOfWork.CommitAsync();
     }
 
-    public async Task<IEnumerable<OrderDto>> GetAll()
+    public async Task<PagedResult<OrderDto>> GetAll(OrderQuery query)
     {
-        var orders = await _unitOfWork.Orders.GetAllAsync();
+        var orders = await _unitOfWork.Orders.GetAllAsync(query);
         var orderDtos = _mapper.Map<IEnumerable<OrderDto>>(orders);
-        return orderDtos;
+
+        var totalCount = await _unitOfWork.Orders.CountAsync(query);
+
+        return new PagedResult<OrderDto>(orderDtos, totalCount, query.PageSize, query.PageNumber);
     }
 
-    public async Task<IEnumerable<OrderDto>> GetForUser()
+    public async Task<PagedResult<OrderDto>> GetForUser(OrderQuery query)
     {
         var userId = GetUserId();
-        var orders = await _unitOfWork.Orders.GetByUserIdAsync(userId);
+        var orders = await _unitOfWork.Orders.GetByUserIdAsync(query, userId);
         var orderDtos = _mapper.Map<IEnumerable<OrderDto>>(orders);
-        return orderDtos;
+
+        var totalCount = await _unitOfWork.Orders.CountByUserIdAsync(userId);
+
+        return new PagedResult<OrderDto>(orderDtos, totalCount, query.PageSize, query.PageNumber);
     }
 
     public async Task Accept(int orderId)

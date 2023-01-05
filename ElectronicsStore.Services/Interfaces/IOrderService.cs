@@ -1,12 +1,13 @@
-﻿using ElectronicsStore.Services.Models;
+﻿using ElectronicsStore.Data.Queries;
+using ElectronicsStore.Services.Models;
 
 namespace ElectronicsStore.Services.Interfaces;
 
 public interface IOrderService
 {
     Task MakeOrder(IEnumerable<CreateOrderProductDto> dtos);
-    Task<IEnumerable<OrderDto>> GetAll();
-    Task<IEnumerable<OrderDto>> GetForUser();
+    Task<PagedResult<OrderDto>> GetAll(OrderQuery query);
+    Task<PagedResult<OrderDto>> GetForUser(OrderQuery query);
     Task Accept(int orderId);
     Task Cancel(int orderId);
 }
