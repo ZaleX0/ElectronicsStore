@@ -15,6 +15,7 @@ export default function Login() {
 
   const handleLogin = async (event) => {
     event.preventDefault();
+    setIsInvalid(false);
     const response = await login(formInputs.email, formInputs.password);
     if (response.status === 200) {
       navigate('/');
