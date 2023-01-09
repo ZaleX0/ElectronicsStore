@@ -12,5 +12,5 @@ public interface IOrderRepository
     void Remove(Order order);
     void Update(Order order);
     Task<int> CountAsync(OrderQuery query);
-    Task<int> CountByUserIdAsync(int userId);
+    Task<int> CountByUserIdAsync(OrderQuery query, int userId);
 }

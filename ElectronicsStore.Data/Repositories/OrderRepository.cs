@@ -26,7 +26,8 @@ public class OrderRepository : IOrderRepository
 
     public async Task<IEnumerable<Order>> GetAllAsync(OrderQuery query)
     {
-        var baseQuery = SearchPhrase(_context.Orders, query.SearchPhrase);
+        var baseQuery = WhereNotAccepted(_context.Orders, query.ShowNotAccepted);
+        baseQuery = SearchPhrase(baseQuery, query.SearchPhrase);
         baseQuery = Paginate(baseQuery, query.PageSize, query.PageNumber);
         baseQuery = IncludeUserAndOrderProducts(baseQuery);
         return await baseQuery.ToListAsync();
@@ -35,6 +36,7 @@ public class OrderRepository : IOrderRepository
     public async Task<IEnumerable<Order>> GetByUserIdAsync(OrderQuery query, int userId)
     {
         var baseQuery = _context.Orders.Where(o => o.UserId == userId);
+        baseQuery = WhereNotAccepted(baseQuery, query.ShowNotAccepted);
         baseQuery = Paginate(baseQuery, query.PageSize, query.PageNumber);
         baseQuery = IncludeUserAndOrderProducts(baseQuery);
         return await baseQuery.ToListAsync();
@@ -47,12 +49,15 @@ public class OrderRepository : IOrderRepository
 
     public async Task<int> CountAsync(OrderQuery query)
     {
-        return await SearchPhrase(_context.Orders, query.SearchPhrase).CountAsync();
+        var baseQuery = WhereNotAccepted(_context.Orders, query.ShowNotAccepted);
+        baseQuery = SearchPhrase(baseQuery, query.SearchPhrase);
+        return await baseQuery.CountAsync();
     }
 
-    public async Task<int> CountByUserIdAsync(int userId)
+    public async Task<int> CountByUserIdAsync(OrderQuery query, int userId)
     {
-        return await _context.Orders.CountAsync(o => o.UserId == userId);
+        var baseQuery = WhereNotAccepted(_context.Orders, query.ShowNotAccepted);
+        return await baseQuery.CountAsync(o => o.UserId == userId);
     }
 
     public void Update(Order order)
@@ -89,5 +94,12 @@ public class OrderRepository : IOrderRepository
         return query
             .Skip(pageSize * (pageNumber - 1))
             .Take(pageSize);
+    }
+
+    private IQueryable<Order> WhereNotAccepted(IQueryable<Order> query, bool showNotAccepted)
+    {
+        return showNotAccepted
+            ? query.Where(o => o.TimeAccepted == null)
+            : query;
     }
 }

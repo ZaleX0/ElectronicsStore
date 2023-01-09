@@ -54,6 +54,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 builder.Services.AddScoped<IValidator<RegisterDto>, RegisterUserDtoValidator>();
 builder.Services.AddScoped<IValidator<ProductQuery>, ProductQueryValidator>();
+builder.Services.AddScoped<IValidator<OrderQuery>, OrderQueryValidator>();
 
 // Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -107,12 +108,14 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityRequirement(openApiSecurityRequirement);
 });
 
+// Build app
 var app = builder.Build();
 
 // Seed sample data
-var scope = app.Services.CreateScope();
-var seeder = scope.ServiceProvider.GetRequiredService<BrandAndProductSeeder>();
-await seeder.Seed();
+await app
+    .Services.CreateScope()
+    .ServiceProvider.GetRequiredService<BrandAndProductSeeder>()
+    .SeedAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

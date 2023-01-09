@@ -16,7 +16,7 @@ public class BrandAndProductSeeder
 		_authService = authService;
 	}
 
-	public async Task Seed()
+	public async Task SeedAsync()
 	{
 		if (!_context.Database.CanConnect())
 			return;

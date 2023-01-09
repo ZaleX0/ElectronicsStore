@@ -62,7 +62,7 @@ public class OrderService : IOrderService
         var orders = await _unitOfWork.Orders.GetByUserIdAsync(query, userId);
         var orderDtos = _mapper.Map<IEnumerable<OrderDto>>(orders);
 
-        var totalCount = await _unitOfWork.Orders.CountByUserIdAsync(userId);
+        var totalCount = await _unitOfWork.Orders.CountByUserIdAsync(query, userId);
 
         return new PagedResult<OrderDto>(orderDtos, totalCount, query.PageSize, query.PageNumber);
     }
