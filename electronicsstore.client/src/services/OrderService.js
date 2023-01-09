@@ -25,8 +25,8 @@ export default class OrderService {
     return { status: response.status, text: await response.text() }
   }
 
-  async getAllOrders(searchPhrase, pageNumber, pageSize) {
-    const params = `?searchPhrase=${searchPhrase}&pageNumber=${pageNumber}&pageSize=${pageSize}`;
+  async getAllOrders(showNotAccepted, searchPhrase, pageNumber, pageSize) {
+    const params = `?showNotAccepted=${showNotAccepted}&searchPhrase=${searchPhrase}&pageNumber=${pageNumber}&pageSize=${pageSize}`;
     const response = await fetch(`/api/order/all${params}`, {
       method: "GET",
       headers: {
@@ -35,5 +35,14 @@ export default class OrderService {
       }
     });
     return { status: response.status, text: await response.text() }
+  }
+
+  async acceptOrder(id) {
+    await fetch(`/api/order/${id}`, {
+      method: "PATCH",
+      headers: {
+        'Authorization': authHeader()
+      }
+    })
   }
 }

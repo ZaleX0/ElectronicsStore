@@ -18,13 +18,20 @@ export default function App() {
   return (
     <AuthProvider>
       <ShoppingCartProvider>
-        <Navbar />
-        <Container>
-          {routes()}
-        </Container>
-        <footer>
-          footer
-        </footer>
+        <div className="d-flex flex-column min-vh-100">
+          <Navbar />
+          <Container>
+            {routes()}
+          </Container>  
+          <footer className="mt-auto align-middle">
+            <hr/>
+            <Container>
+              <p>
+                See more details of the project on <a target="_blank" rel="noreferrer" href="https://github.com/ZaleX0/ElectronicsStore">github</a>
+              </p>
+            </Container>
+          </footer>
+        </div>
       </ShoppingCartProvider>
     </AuthProvider>
   )

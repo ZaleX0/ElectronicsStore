@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { FormSelect, InputGroup, Pagination, Table } from 'react-bootstrap';
+import { CheckLg, ThreeDots } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import OrderService from '../services/OrderService'
+import { formatCurrency } from '../utilities/formatCurrency';
+import { formatDate } from '../utilities/formatDate';
 
 export default function Orders() {
   const orderService = new OrderService();
@@ -27,8 +30,8 @@ export default function Orders() {
   
   return (
     <>
-      <h1 className="display-4">My orders</h1>
-      <Table variant="bordered">
+      <h1 className="display-4 mb-4">My orders</h1>
+      <Table variant="bordered" className="mb-2">
         <thead className="table-primary">
           <tr>
             <th>Id</th>
@@ -43,18 +46,23 @@ export default function Orders() {
         {orderItems.map(item =>
           <tr key={item.id}>
             <td>{item.id}</td>
-            <td>{item.timeOrdered}</td>
-            <td>{item.timeAccepted}</td>
+            <td>{formatDate(item.timeOrdered)}</td>
+            <td>{formatDate(item.timeAccepted)}</td>
             <td>
               {item.products.map(p =>
-                <>
-                  {p.name}
+                <div key={p.id}>
+                  <span className="text-muted">x{p.quantity}</span> - {p.name}
                   <br/>
-                </>
+                </div>
               )}
             </td>
-            <td>{item.totalPrice}</td>
-            <td>{item.isAccepted ? "true" : "false"}</td>
+            <td>{formatCurrency(item.totalPrice)}</td>
+            <td className="text-center align-middle">
+              {item.isAccepted
+                ? <CheckLg size={50} color="green"/>
+                : <ThreeDots size={20} color="blue"/>
+              }
+            </td>
           </tr>
         )}
         </tbody>
@@ -88,7 +96,8 @@ export default function Orders() {
             <option value={2}>2</option>
             <option value={5}>5</option>
             <option value={10}>10</option>
-            <option value={15}>15</option>
+            <option value={20}>20</option>
+            <option value={30}>30</option>
           </FormSelect>
         </InputGroup>
       </div>
