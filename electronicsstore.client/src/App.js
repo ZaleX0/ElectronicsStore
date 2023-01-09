@@ -27,7 +27,8 @@ export default function App() {
             <hr/>
             <Container>
               <p>
-                See more details of the project on <a target="_blank" rel="noreferrer" href="https://github.com/ZaleX0/ElectronicsStore">github</a>
+                Electronics Store - See description of the project on
+                <a target="_blank" rel="noreferrer" href="https://github.com/ZaleX0/ElectronicsStore">github</a>.
               </p>
             </Container>
           </footer>
