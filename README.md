@@ -15,7 +15,7 @@ Right click on the `ElectronicsStore.Api` project in Solution Explorer and selec
 
 ## 2. Database
 1. Connection String
-    - Change your connection string in [appsettings.json](ReadingList/appsettings.json)
+    - Change your connection string in [appsettings.json](ElectronicsStore.Api/appsettings.json)
 ```json
 "ConnectionStrings": {
     "Default": "Server=(localdb)\\mssqllocaldb;Database=ElectronicsStore;Trusted_Connection=True;"
