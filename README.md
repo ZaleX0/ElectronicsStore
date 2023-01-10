@@ -27,6 +27,8 @@ Right click on the `ElectronicsStore.Api` project in Solution Explorer and selec
     - Run `update-database` command.
 > Sample data would be inserted into database automatically by using the [BrandAndProductSeeder](ElectronicsStore.Services/BrandAndProductSeeder.cs)
 
+Default admin user - email: `admin@admin.com`, password: `ZAQ!2wsx`
+
 ### You can start the API now
 
 ## 3. React Client
